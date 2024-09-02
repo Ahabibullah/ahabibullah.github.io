@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Open Camera</title>
+</head>
+<body>
+    <h1>Open Camera</h1>
+    <button id="openCameraButton">Open Camera</button>
+
+    <script>
+        document.getElementById('openCameraButton').addEventListener('click', function() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        // Camera opened successfully
+                        console.log('Camera opened');
+                    })
+                    .catch(function(error) {
+                        console.error('Error opening camera:', error);
+                    });
+            } else {
+                alert('Camera not supported');
+            }
+        });
+    </script>
+</body>
+</html>
