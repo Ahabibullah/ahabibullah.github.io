@@ -5,15 +5,20 @@
 </head>
 <body>
     <h1>Open Camera</h1>
-    <button id="openCameraButton">Open Camera</button>
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
 
     <script>
-        document.getElementById('openCameraButton').addEventListener('click', function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: true })
                     .then(function(stream) {
-                        // Camera opened successfully
-                        console.log('Camera opened');
+                        video.srcObject = stream;
+                        video.play();
                     })
                     .catch(function(error) {
                         console.error('Error opening camera:', error);
@@ -21,6 +26,17 @@
             } else {
                 alert('Camera not supported');
             }
+
+            video.addEventListener('play', function() {
+                const drawFrame = () => {
+                    if (video.paused || video.ended) {
+                        return;
+                    }
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    requestAnimationFrame(drawFrame);
+                };
+                drawFrame();
+            });
         });
     </script>
 </body>
